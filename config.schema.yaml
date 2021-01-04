@@ -1,0 +1,6 @@
+---
+environment:
+  description: "环境名称"
+  type: "string"
+  required: true
+  default: development

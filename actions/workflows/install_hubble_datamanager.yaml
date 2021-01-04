@@ -1,0 +1,58 @@
+version: 1.0
+description: 安装hubble_datamanager工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装hubble_datamanager
+  install_hubble_datamanager:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/fast/hubble/hubble-datamanager.yml"
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - check_hubble_metagrid
+      - check_hubble_stargate
+      - check_hubble_kettle
+      - check_hubble_broker
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "部署hubble_datamanager失败，请查看install_hubble_datamanager日志定位错误原因。"
+  # 2. 检查hubble_metagrid状态
+  check_hubble_metagrid:
+    action: astrolabe.check_hubble_metagrid
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "hubble_metagrid状态异常，请查看stderr定位错误原因。"
+  # 2. 检查hubble_stargate状态
+  check_hubble_stargate:
+    action: astrolabe.check_hubble_stargate
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "hubble_stargate状态异常，请查看stderr定位错误原因。"
+  # 2. 检查hubble_kettle状态
+  check_hubble_kettle:
+    action: astrolabe.check_hubble_kettle
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "hubble_kettle状态异常，请查看stderr定位错误原因。"
+  # 2. 检查hubble_broker状态
+  check_hubble_broker:
+    action: astrolabe.check_hubble_broker
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "hubble_broker状态异常，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

@@ -1,0 +1,7 @@
+---
+name: install_greenplum
+pack: astrolabe
+description: 通过工作流安装Greenplum
+runner_type: orquesta
+entry_point: workflows/install_greenplum.yaml
+enabled: true

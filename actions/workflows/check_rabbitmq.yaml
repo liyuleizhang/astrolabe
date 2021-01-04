@@ -1,0 +1,7 @@
+version: 1.0
+description: rabbitmq状态检查工作流
+input:
+- force_ansible
+tasks:
+  check_rabbitmq:
+    action: astrolabe_core.testinfra hosts="rabbitmq_servers" testcases="/src/tests/test_rabbitmq.py" force_ansible="{{ ctx('force_ansible') }}"

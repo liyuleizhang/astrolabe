@@ -1,0 +1,16 @@
+version: 1.0
+description: 安装CDH工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装CDH
+  install_cdh:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/cdh/site.yml"
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "安装配置CDH错误，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

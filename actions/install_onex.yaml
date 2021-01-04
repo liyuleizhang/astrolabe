@@ -1,0 +1,13 @@
+---
+name: install_onex
+pack: astrolabe
+description: 通过工作流安装onex
+runner_type: orquesta
+entry_point: workflows/install_onex.yaml
+enabled: true
+parameters:
+  ha_mode:
+    description: 是否以HA模式部署，默认不启用HA模式。
+    required: true
+    type: boolean
+    default: false

@@ -1,0 +1,7 @@
+version: 1.0
+description: 检查mgr集群状态
+input:
+- force_ansible
+tasks:
+  check_mgr:
+    action: astrolabe_core.testinfra hosts="mgr_servers" testcases="/src/tests/test_mgr.py" force_ansible="{{ ctx('force_ansible') }}"

@@ -1,0 +1,7 @@
+version: 1.0
+description: hubble_kettle状态检查工作流
+input:
+- force_ansible
+tasks:
+  check_hubble_kettle:
+    action: astrolabe_core.testinfra hosts="hb_kettle" testcases="/src/tests/test_hubble_kettle.py" force_ansible="{{ ctx('force_ansible') }}"

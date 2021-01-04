@@ -1,0 +1,28 @@
+---
+name: backup_nexus
+pack: astrolabe
+description: 备份nexus数据目录到tgz文件
+runner_type: remote-shell-cmd
+entry_point: ''
+enabled: true
+parameters:
+  source:
+    description: nexus数据目录，默认：/data
+    required: true
+    type: string
+    default: '/data'
+  output:
+    description: 输出文件
+    required: true
+    type: string
+    default: '/data/nexus-data.1.1.0.tgz'
+  cmd:
+    immutable: true
+    default: 'tar -czvf {{ output }} {{ source }}/* --exclude=/data/cache --exclude=/data/tmp --exclude=/data/log --exclude=/data/*.tgz'
+  username:
+    default: root
+  password:
+    default: centos
+  timeout:
+    default: 1800
+

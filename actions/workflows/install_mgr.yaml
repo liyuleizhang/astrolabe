@@ -1,0 +1,28 @@
+version: 1.0
+description: 安装Mysql MGR工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装MGR
+  install_mgr:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/mysql/mgr.yml"
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - check_mgr
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "安装配置mysql mgr错误，请查看stderr定位错误原因。"
+  # 2. 检查mgr状态
+  check_mgr:
+    action: astrolabe.check_mgr force_ansible="true"
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "检查mgr状态错误，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

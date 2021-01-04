@@ -1,0 +1,7 @@
+version: 1.0
+description: 检查操作系统状态
+input:
+- force_ansible
+tasks:
+  check_os:
+    action: astrolabe_core.testinfra hosts="all" testcases="/src/tests/test_os.py" force_ansible="{{ ctx('force_ansible') }}"

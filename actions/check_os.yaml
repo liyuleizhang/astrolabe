@@ -1,0 +1,13 @@
+---
+name: check_os
+pack: astrolabe
+description: 检查操作系统状态，检查内容：操纵系统版本、内核版本、必要软件、防火墙是否关闭、与介质仓库连通性。
+runner_type: orquesta
+entry_point: workflows/check_os.yaml
+enabled: true
+parameters:
+  force_ansible:
+    description: 是否强制使用ansible方式连接到目标主机，默认关闭。仅当与目标主机未配置ssh认证时，推荐使用。
+    required: true
+    type: boolean
+    default: false

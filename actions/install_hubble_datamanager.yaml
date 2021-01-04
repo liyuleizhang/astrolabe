@@ -1,0 +1,7 @@
+---
+name: install_hubble_datamanager
+pack: astrolabe
+description: 通过工作流安装hubble_datamanager
+runner_type: orquesta
+entry_point: workflows/install_hubble_datamanager.yaml
+enabled: true

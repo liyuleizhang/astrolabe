@@ -1,0 +1,7 @@
+---
+name: install_mgr
+pack: astrolabe
+description: 通过工作流安装Mysql MGR
+runner_type: orquesta
+entry_point: workflows/install_mgr.yaml
+enabled: true

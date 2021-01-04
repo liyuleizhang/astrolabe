@@ -1,0 +1,16 @@
+version: 1.0
+description: 安装monitoring工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装monitoring
+  install_monitoring:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/monitoring/site.yml"
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "安装配置monitoring错误，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

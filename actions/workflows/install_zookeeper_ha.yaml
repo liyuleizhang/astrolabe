@@ -1,0 +1,28 @@
+version: 1.0
+description: 安装zookeeper集群工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装zookeeper
+  install_zookeeper_ha:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/zookeeper/zookeeper-ha.yml"
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - check_zookeeper
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "安装配置zookeeper集群错误，请查看stderr定位错误原因。"
+  # 2. 检查zookeeper状态
+  check_zookeeper:
+    action: astrolabe.check_zookeeper force_ansible="true"
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "zookeeper集群状态异常，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

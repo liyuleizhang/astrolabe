@@ -1,0 +1,7 @@
+---
+name: install_hubble_standalone
+pack: astrolabe
+description: 通过工作流安装hubble_standalone
+runner_type: orquesta
+entry_point: workflows/install_hubble_standalone.yaml
+enabled: true

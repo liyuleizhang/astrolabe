@@ -1,0 +1,16 @@
+version: 1.0
+description: 安装Greenplum工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装Greenplum
+  install_greenplum:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/greenplum/site.yml"
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "安装配置Greenplum错误，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

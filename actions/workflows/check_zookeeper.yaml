@@ -1,0 +1,7 @@
+version: 1.0
+description: zookeeper状态检查工作流
+input:
+- force_ansible
+tasks:
+  check_zookeeper:
+    action: astrolabe_core.testinfra hosts="zookeeper_servers" testcases="/src/tests/test_zookeeper.py" force_ansible="{{ ctx('force_ansible') }}"

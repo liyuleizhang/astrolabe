@@ -1,0 +1,7 @@
+---
+name: install_monitoring
+pack: astrolabe
+description: 通过工作流安装监控
+runner_type: orquesta
+entry_point: workflows/install_monitoring.yaml
+enabled: true

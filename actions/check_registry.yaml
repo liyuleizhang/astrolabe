@@ -1,0 +1,13 @@
+---
+name: check_registry
+pack: astrolabe
+description: 检查介质仓库状态，检查内容：nexus容器健康状态、服务页面访问。
+runner_type: orquesta
+entry_point: workflows/check_registry.yaml
+enabled: true
+parameters:
+  force_ansible:
+    description: 是否强制使用ansible方式连接到目标主机，默认关闭。仅当与目标主机未配置ssh认证时，推荐使用。
+    required: true
+    type: boolean
+    default: false

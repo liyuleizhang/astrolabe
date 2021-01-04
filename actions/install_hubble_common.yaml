@@ -1,0 +1,7 @@
+---
+name: install_hubble_common
+pack: astrolabe
+description: 通过工作流安装配置基础环境
+runner_type: orquesta
+entry_point: workflows/install_hubble_common.yaml
+enabled: true

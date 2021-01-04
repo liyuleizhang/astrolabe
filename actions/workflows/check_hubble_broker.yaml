@@ -1,0 +1,7 @@
+version: 1.0
+description: hubble_broker状态检查工作流
+input:
+- force_ansible
+tasks:
+  check_hubble_broker:
+    action: astrolabe_core.testinfra hosts="hb_broker" testcases="/src/tests/test_hubble_broker.py" force_ansible="{{ ctx('force_ansible') }}"

@@ -1,0 +1,28 @@
+version: 1.0
+description: 安装whitehole工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装whitehole
+  install_whitehole:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/fast/whitehole/whitehole.yml"
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - check_whitehole
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "部署whitehole失败，请查看install_whitehole日志定位错误原因。"
+  # 2. 检查whitehole状态
+  check_whitehole:
+    action: astrolabe.check_whitehole
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "whitehole集群状态异常，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

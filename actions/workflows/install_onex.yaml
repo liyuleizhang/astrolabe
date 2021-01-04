@@ -1,0 +1,46 @@
+version: 1.0
+description: 安装Nexus工作流
+vars:
+- error: ""
+input:
+- ha_mode
+tasks:
+  # 1. 通过ansible脚本安装onex
+  install_onex:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/fast/onex/onex.yml"
+    next:
+    # TODO, 修改条件，未高可用部署仍然执行check_onex
+    - when: "{{ succeeded() and ctx('ha_mode') }}"
+      do:
+      - install_keepalived
+    - when: "{{ succeeded() and (not ctx('ha_mode')) }}"
+      do:
+      - check_onex
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "部署Onex失败，请查看install_onex日志定位错误原因。"
+  # 2. 通过ansible脚本安装onex vip
+  install_keepalived:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/fast/onex/keepalived.yml"
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - check_onex
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "部署Onex Keepalived失败，请查看install_keepalived日志定位错误原因。"
+  # 3. 检查onex状态
+  check_onex:
+    action: astrolabe.check_onex
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "onex集群状态异常，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

@@ -1,0 +1,11 @@
+---
+name: install_nexus
+pack: astrolabe
+description: 通过工作流安装Nexus
+runner_type: orquesta
+entry_point: workflows/install_nexus.yaml
+enabled: true
+parameters:
+  nexus_data_package: # Nexus数据压缩包
+    type: string
+    default: /opt/chinacloud/astrolabe/assets/nexus/nexus-data.tgz

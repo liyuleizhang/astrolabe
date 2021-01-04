@@ -1,0 +1,7 @@
+version: 1.0
+description: whitehole状态检查工作流
+input:
+- force_ansible
+tasks:
+  check_whitehole:
+    action: astrolabe_core.testinfra hosts="wh_servers" testcases="/src/tests/test_whitehole.py" force_ansible="{{ ctx('force_ansible') }}"

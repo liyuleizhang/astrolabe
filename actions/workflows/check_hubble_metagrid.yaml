@@ -1,0 +1,7 @@
+version: 1.0
+description: hubble_metagrid状态检查工作流
+input:
+- force_ansible
+tasks:
+  check_hubble_metagrid:
+    action: astrolabe_core.testinfra hosts="hb_broker" testcases="/src/tests/test_hubble_metagrid.py" force_ansible="{{ ctx('force_ansible') }}"

@@ -1,0 +1,28 @@
+version: 1.0
+description: 安装hubble_standalone工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装hubble_standalone
+  install_hubble_standalone:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/fast/hubble/hubble-datagovern.yml"
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - check_hubble_standalone
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "部署hubble_standalone失败，请查看install_hubble_standalone日志定位错误原因。"
+  # 2. 检查hubble_standalone状态
+  check_hubble_standalone:
+    action: astrolabe.check_hubble_standalone
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "hubble_standalone集群状态异常，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

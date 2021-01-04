@@ -1,0 +1,7 @@
+---
+name: install_mysql
+pack: astrolabe
+description: 通过工作流安装Mysql
+runner_type: orquesta
+entry_point: workflows/install_mysql.yaml
+enabled: true

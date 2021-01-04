@@ -1,0 +1,7 @@
+---
+name: install_zookeeper_ha
+pack: astrolabe
+description: 通过工作流安装zookeeper集群
+runner_type: orquesta
+entry_point: workflows/install_zookeeper_ha.yaml
+enabled: true

@@ -1,0 +1,66 @@
+version: 1.0
+description: 安装Nexus工作流
+vars:
+- error: ""
+input:
+- nexus_data_package
+tasks:
+  # 1. 检查 /data 目录是否存在文件
+  check_data_dir_exist:
+    action: astrolabe_core.local_is_dir_empty dirpath="/data" timeout=60
+    next:
+    - when: "{{ succeeded() }}" # 成功后，解压压缩包
+      do:
+      - check_packages_exist
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: /data目录不存在或不为空，如目录不为空，请确认是否清空文件夹后继续部署。
+  # 2. 检查Nexus文件压缩包是否存在
+  check_packages_exist:
+    action: astrolabe_core.local_is_file_exist filepath="{{ ctx('nexus_data_package') }}" timeout=60
+    next:
+    - when: "{{ succeeded() }}" # 成功后，解压压缩包
+      do:
+      - extract_nexus_data
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: 文件{{ ctx('nexus_data_package') }}不存在，请将文件放置到指定目录。
+  # 3. 解压Nexus文件压缩包到"/data"目录
+  extract_nexus_data:
+    action: core.local cmd="tar xvf {{ ctx('nexus_data_package') }} -C /" timeout=3600
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - install_nexus
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "解压文件失败，请查看stderr定位错误原因。"
+  # 4. 通过ansible脚本安装nexus
+  install_nexus:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/common/registry.yml"
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - check_registry
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "部署Nexus失败，请查看stderr定位错误原因。"
+  # 5. 检查nexus是否正常运行
+  check_registry:
+    action: astrolabe.check_registry force_ansible="true"
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "registry状态异常，请查看stderr定位异常。"
+output:
+  - error: "{{ ctx('error') }}"

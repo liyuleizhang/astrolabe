@@ -1,0 +1,7 @@
+version: 1.0
+description: hubble_standalone状态检查工作流
+input:
+- force_ansible
+tasks:
+  check_hubble_standalone:
+    action: astrolabe_core.testinfra hosts="hb_standalone" testcases="/src/tests/test_hubble_standalone.py" force_ansible="{{ ctx('force_ansible') }}"

@@ -1,0 +1,7 @@
+---
+name: install_rabbitmq_ha
+pack: astrolabe
+description: 通过工作流安装RabbitMQ集群
+runner_type: orquesta
+entry_point: workflows/install_rabbitmq_ha.yaml
+enabled: true

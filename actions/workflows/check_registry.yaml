@@ -1,0 +1,7 @@
+version: 1.0
+description: 检查镜像仓库
+input:
+- force_ansible
+tasks:
+  check_registry:
+    action: astrolabe_core.testinfra hosts="registry" testcases="/src/tests/test_registry.py" force_ansible="{{ ctx('force_ansible') }}"

@@ -1,0 +1,13 @@
+---
+name: check_hubble_broker
+pack: astrolabe
+description: 每日早8点定时检测hubble_broker集群状态
+enabled: false
+trigger:
+  type: core.st2.CronTimer
+  parameters: # 参数配置文档见：https://apscheduler.readthedocs.io/en/3.0/modules/triggers/cron.html#api
+    second: "0"
+    minute: "0"
+    hour: "8"
+action:
+  ref: astrolabe.check_hubble_broker

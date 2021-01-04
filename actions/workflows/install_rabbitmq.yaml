@@ -1,0 +1,28 @@
+version: 1.0
+description: 安装RabbitMQ工作流
+vars:
+- error: ""
+tasks:
+  # 1. 通过ansible脚本安装rabbitmq
+  install_rabbitmq:
+    action: ansible.playbook playbook="/etc/ansible/playbooks/rabbitmq/rabbitmq.yml"
+    next:
+    - when: "{{ succeeded() }}"
+      do:
+      - check_rabbitmq
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "安装配置rabbitmq错误，请查看stderr定位错误原因。"
+  # 2. 检查rabbitmq状态
+  check_rabbitmq:
+    action: astrolabe.check_rabbitmq
+    next:
+    - when: "{{ failed() }}"
+      do:
+      - fail
+      publish:
+      - error: "rabbitmq状态异常，请查看stderr定位错误原因。"
+output:
+  - error: "{{ ctx('error') }}"

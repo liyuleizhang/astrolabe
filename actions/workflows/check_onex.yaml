@@ -1,0 +1,7 @@
+version: 1.0
+description: onex状态检查工作流
+input:
+- force_ansible
+tasks:
+  check_onex:
+    action: astrolabe_core.testinfra hosts="onex_servers" testcases="/src/tests/test_onex.py" force_ansible="{{ ctx('force_ansible') }}"
